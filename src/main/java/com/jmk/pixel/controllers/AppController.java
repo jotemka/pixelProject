@@ -1,14 +1,11 @@
 package com.jmk.pixel.controllers;
 
 import com.jmk.pixel.helpers.Helper;
-import com.jmk.pixel.model.GeographicPointList;
 import com.jmk.pixel.model.ResponseObject;
 import com.jmk.pixel.notifications.Notification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/algorithms")
