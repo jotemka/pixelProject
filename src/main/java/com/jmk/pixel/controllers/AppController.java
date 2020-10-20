@@ -23,6 +23,7 @@ public class AppController {
     ResponseEntity getControlDigit(@PathVariable String numberAsString){
         try{
             Integer number = Integer.parseInt(numberAsString);
+            //Nie przyjmowane są wartości negatywne
             if(number<0){
                 return new ResponseEntity(ResponseObject.createError(Notification.NEGATIVE_NUMBER), HttpStatus.BAD_REQUEST);
             }
@@ -32,7 +33,7 @@ public class AppController {
             return new ResponseEntity(ResponseObject.createSuccess("Cyfra kontrolna to: " + controlDigit), HttpStatus.OK);
 
         } catch(NumberFormatException e){
-            //handle
+            //Jeśli nie podano liczby (np. litery) zwracany jest błąd
             return new ResponseEntity(ResponseObject.createError(Notification.NOT_A_NUMBER), HttpStatus.BAD_REQUEST);
         }
     }
@@ -42,6 +43,7 @@ public class AppController {
     ResponseEntity checkIfNumberCorrect(@PathVariable String numberAsString){
         try{
             Integer number = Integer.parseInt(numberAsString);
+            //Nie przyjmujmowane są wartości negatywne
             if(number<0){
                 return new ResponseEntity(ResponseObject.createError(Notification.NEGATIVE_NUMBER), HttpStatus.BAD_REQUEST);
             }
@@ -54,7 +56,7 @@ public class AppController {
             }
 
         } catch(NumberFormatException e){
-            //handle
+            //Jeśli nie podano liczby (np. litery) zwracany jest błąd
             return new ResponseEntity(ResponseObject.createError(Notification.NOT_A_NUMBER), HttpStatus.BAD_REQUEST);
         }
     }
@@ -63,9 +65,7 @@ public class AppController {
     public @ResponseBody ResponseEntity calculateRoute(@Valid @RequestBody GeographicPointList geoPointList){
 
         ArrayList<GeographicPoint> points = geoPointList.getGeoPoints();
-//        for (GeographicPoint p: points) {
-//            System.out.println(p.getName());
-//        }
+
         ArrayList<GeographicPoint> pickedRoute = Helper.nearestNeighbour(points);
         Double routeLength = Helper.calculateRouteLength(pickedRoute);
 
@@ -76,6 +76,7 @@ public class AppController {
         }
         Route finalizedRoute = new Route(routePoints, routeLength);
 
+        //utworzenie struktury odpowiedzi w formie JSON
         JsonNode returnData = mapper.valueToTree(finalizedRoute);
 
         return new ResponseEntity(ResponseObject.createSuccess("Trasa obliczona metodą najbliższego sąsiada.", returnData), HttpStatus.OK);

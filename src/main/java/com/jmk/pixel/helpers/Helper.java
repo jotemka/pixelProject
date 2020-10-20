@@ -1,8 +1,5 @@
 package com.jmk.pixel.helpers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jmk.pixel.model.GeographicPoint;
 
 import java.util.ArrayList;
@@ -10,16 +7,16 @@ import java.util.Collections;
 
 public class Helper {
 
-    private static ObjectMapper mapper = new ObjectMapper();
-
     //obliczanie cyfry kontrolej algorytmem luhna
     public static Integer calculateControlDigit(Integer number){
         int controlNumber = 0;
 
         ArrayList<Integer> digits = splitNumber(number);
 
+        //numery pozycji uwzględniają ostatnią cyfrę kontrolną (index 0)
         int position = digits.size();
         for(int i=0; i<digits.size(); i++){
+            //jeśli pozycja jest nieparzysta cyfra mnożona jest przez 2
             if(position%2 != 0){
                 int doubled = digits.get(i) * 2;
                 if(doubled >= 10){
@@ -31,7 +28,6 @@ public class Helper {
             }
             position = position - 1;
         }
-
 
         for(Integer i : digits){
             controlNumber += i;
@@ -50,8 +46,11 @@ public class Helper {
 
         ArrayList<Integer> digits = splitNumber(number);
 
+        //pozycje uwzględniają wszystkie cyfry, ponieważ indeksy w ArrayList zaczynają sie od 0
+        //należy ojdąć 1 aby pozycja zgadzała się z indeksem
         int position = digits.size()-1;
         for(int i=0; i<digits.size(); i++){
+            //jeśli pozycja jest nieparzysta cyfra mnożona jest przez 2
             if(position%2 != 0){
                 int doubled = digits.get(i) * 2;
                 if(doubled >= 10){
@@ -136,6 +135,7 @@ public class Helper {
     public static Double calculateRouteLength(ArrayList<GeographicPoint> route){
         Double routeLength = new Double(0.0);
 
+        //obliczanie długości poszczególnych odcinków trasy i sumowanie ich
         for(int i = 0; i <= route.size()-2; i++){
             GeographicPoint start = route.get(i);
             GeographicPoint end = route.get(i+1);
@@ -147,16 +147,4 @@ public class Helper {
         return routeLength;
     }
 
-    public static JsonNode createJson() {
-        JsonNode node = mapper.createObjectNode();
-        return node;
-    }
-
-    public static void addSimpleProperty(JsonNode json, String property, String obj){
-        ((ObjectNode) json).put(property, obj);
-    }
-
-    public static void addProperty(JsonNode json, String property, JsonNode obj){
-        ((ObjectNode) json).set(property, obj);
-    }
 }
