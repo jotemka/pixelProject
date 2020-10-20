@@ -5,16 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class GeographicPoint {
-
+@AllArgsConstructor
+public class GeographicPointList {
     @NotNull
-    Double latitude;
-    @NotNull
-    Double longitude;
-    @NotNull
-    String name;
+    private ArrayList<GeographicPoint> geoPoints;
 }
