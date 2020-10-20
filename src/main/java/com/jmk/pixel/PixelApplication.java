@@ -2,6 +2,8 @@ package com.jmk.pixel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class PixelApplication {
@@ -9,5 +11,8 @@ public class PixelApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PixelApplication.class, args);
 	}
+
+    @Bean
+    public RestTemplate restTemplate() { return new RestTemplate(); }
 
 }
