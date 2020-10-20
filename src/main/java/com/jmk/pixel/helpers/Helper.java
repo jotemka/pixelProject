@@ -3,6 +3,7 @@ package com.jmk.pixel.helpers;
 import com.jmk.pixel.model.GeographicPoint;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Helper {
 
@@ -68,8 +69,34 @@ public class Helper {
         return false;
     }
 
+    //algorytm nearest neighbour
     public static ArrayList<GeographicPoint> nearestNeighbour(ArrayList<GeographicPoint> pointArrayList){
         ArrayList<GeographicPoint> route = new ArrayList<>();
+
+        //przyjmujemy że pierwszy podany punkt jest punktem startowym
+        route.add(pointArrayList.get(0));
+        pointArrayList.remove(0);
+
+        while(pointArrayList.size()>1){
+            ArrayList<Double> distances = new ArrayList<>();
+            GeographicPoint lastVisited = route.get(route.size()-1);
+            for (GeographicPoint g : pointArrayList) {
+                //obliczenie odległości od ostatniego odwiedzonego punktu do pozostałych
+                Double currentDistance = distance(lastVisited.getLatitude(), g.getLatitude(),
+                        lastVisited.getLongitude(), g.getLongitude());
+                distances.add(currentDistance);
+            }
+            int indexOfMinimalDistance = distances.indexOf(Collections.min(distances));
+            //dopisanie najblizszego sąsiada do odwiedzonych punktów (w przypadku identycznych dystansów, arbitralnie wybieramy pierwszy znaleziony)
+            route.add(pointArrayList.get(indexOfMinimalDistance));
+            //usunięcie odwiedzonego punktu z listy dostępnych punktów
+            pointArrayList.remove(indexOfMinimalDistance);
+        }
+
+        //w momencie gdy zostaje nam jeden punkt do odwiedzenia nie musimy liczyć odległości
+        route.add(pointArrayList.get(0));
+        //nie musimy usuwać ostatniego punktu z listy dostępnych ponieważ mamy już całą trasę
+
 
         return route;
     }
@@ -99,5 +126,19 @@ public class Helper {
 
         distance = Math.pow(distance, 2);
         return  Math.sqrt(distance);
+    }
+
+    public static Double calculateRouteLength(ArrayList<GeographicPoint> route){
+        Double routeLength = new Double(0.0);
+
+        for(int i = 0; i <= route.size()-2; i++){
+            GeographicPoint start = route.get(i);
+            GeographicPoint end = route.get(i+1);
+            double currentDistance = distance(start.getLatitude(), end.getLatitude(),
+                    start.getLongitude(), end.getLongitude());
+            routeLength += currentDistance;
+        }
+
+        return routeLength;
     }
 }
